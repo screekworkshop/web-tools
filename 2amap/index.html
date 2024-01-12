@@ -22,7 +22,7 @@
         <div class="form-group">
             <label for="inputId">Enter your 2A's Unique ID:</label>
             <input type="text" class="form-control" id="inputId" placeholder="2A ID">
-            <small id="status" class="form-text text-muted">Please enter the 8-digit sensor id for 2A and click on <b>Generate Code</b>.</small>
+            <small id="status" class="form-text text-muted">Please enter the 6-digit sensor id for 2A and click on <b>Generate Code</b>.</small>
         </div>
         <button id="copyButton" class="btn btn-primary">Copy Code</button>
         <textarea id="codeOutput" class="form-control" placeholder="The lovelace code for your 2a map will appear here..."></textarea>
@@ -33,23 +33,29 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         // Original code with a placeholder
-        var originalCode = `type: custom:plotly-graph
-
+        var originalCode = `# The following code for a lovelace card requires installation of the Plotly Graph Card from HACS in Home Assistant.
+# To use this card, add a manual lovelace card and paste the follow code in ensuring to replace the sensor names with your sensor's name.
+# base on https://github.com/athua/ha-utils
+type: custom:plotly-graph
 title: Human Sensor 2A %macid% Map
 refresh_interval: 1
 hours_to_show: current_day
 config:
-  modeBarButtonsToRemove: ['select2d', 'lasso2d', 'toImage']
+  modeBarButtonsToRemove:
+    - select2d
+    - lasso2d
+    - toImage
   displaylogo: false
 layout:
-  height: 240
+  height: 230
   margin:
-    l: 50
+    l: 40
     r: 20
     t: 20
     b: 55
   showlegend: true
   xaxis:
+    showticklabels: true
     dtick: 1000
     gridcolor: RGBA(200,200,200,0.15)
     zerolinecolor: RGBA(200,200,200,0.15)
@@ -59,6 +65,7 @@ layout:
       - 4000
       - -4000
   yaxis:
+    showticklabels: true
     dtick: 1000
     gridcolor: RGBA(200,200,200,0.15)
     zerolinecolor: RGBA(200,200,200,0.15)
@@ -73,6 +80,7 @@ entities:
     name: Target1
     marker:
       size: 12
+      symbol: star-diamond
     line:
       shape: spline
       width: 5
@@ -84,6 +92,7 @@ entities:
     name: Target2
     marker:
       size: 12
+      symbol: star-diamond
     line:
       shape: spline
       width: 5
@@ -95,6 +104,7 @@ entities:
     name: Target3
     marker:
       size: 12
+      symbol: star-diamond
     line:
       shape: spline
       width: 5
@@ -319,10 +329,13 @@ raw_plotly_config: true`;
         inputIdElement.addEventListener("input", function() {
             var inputId = inputIdElement.value.trim();
             
-            // 检查输入的ID是否为8位
-            if (inputId.length !== 8) {
+            // 无论输入是否为6位，都保存输入的值到本地存储
+            localStorage.setItem("inputId", inputId);
+
+            // 检查输入的ID是否为6位
+            if (inputId.length !== 6) {
                 // 设置警告消息的文本内容和颜色
-                statusElement.textContent = "Please enter the 8-digit 2A sensor ID correctly!";
+                statusElement.textContent = "Please enter the 6-digit 2A sensor ID correctly!";
             } else {
                 // 清空警告消息和样式
                 statusElement.textContent = "The corresponding Card code has been generated :)";
@@ -340,6 +353,14 @@ raw_plotly_config: true`;
             // alert("Code copied to clipboard!"); // 弹出复制成功的提示
         });
 
+        // 在页面加载时检查本地存储
+        window.addEventListener("load", function() {
+            var savedInputId = localStorage.getItem("inputId");
+            if (savedInputId) {
+                inputIdElement.value = savedInputId;
+                inputIdElement.dispatchEvent(new Event("input")); // 触发输入事件以更新相关内容
+            }
+        });
     </script>
 </body>
 <p style="text-align: center; margin-top: 20px;">
