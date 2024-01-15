@@ -6,7 +6,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
-            margin-top: 50px;
+            margin-top: 10px;
         }
 
         #codeOutput {
@@ -22,22 +22,39 @@
         <div class="form-group">
             <label for="inputId">Enter your 2A's Unique ID:</label>
             <input type="text" class="form-control" id="inputId" placeholder="2A ID">
-            <small id="status" class="form-text text-muted">Please enter the 6-digit sensor id for 2A and click on <b>Generate Code</b>.</small>
+            <small id="status" class="form-text text-muted">Please enter the 6-digit sensor id for 2A and click on <b>Copy Code</b>.</small>
         </div>
+
+    <div class="form-group row align-items-end">
+        <div class="col-sm-8">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="versionOptions" id="simpleVersion" value="simple" checked>
+                <label class="form-check-label" for="simpleVersion">Simple Version</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="versionOptions" id="fullVersion" value="full">
+                <label class="form-check-label" for="fullVersion">Full Version</label>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <img id="previewImage" src="./assets/simple_version.png" alt="Preview" style="max-height: 150px; margin-bottom: 10px;">
+    </div>
+
         <button id="copyButton" class="btn btn-primary">Copy Code</button>
         <textarea id="codeOutput" class="form-control" placeholder="The lovelace code for your 2a map will appear here..."></textarea>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.9/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         // Original code with a placeholder
-        var originalCode = `# The following code for a lovelace card requires installation of the Plotly Graph Card from HACS in Home Assistant.
-# To use this card, add a manual lovelace card and paste the follow code in ensuring to replace the sensor names with your sensor's name.
-# base on https://github.com/athua/ha-utils
+        var originalCode = `# Cards are based on athua's code (https://github.com/athua/ha-utils) with some custom modifications.
+# Code version: 2024.01.15 - %sel_version%
+# Docs: https://docs.screek.io/2a/add-a-map-card
 type: custom:plotly-graph
-title: Human Sensor 2A %macid% Map
 refresh_interval: 1
 hours_to_show: current_day
 config:
@@ -53,9 +70,9 @@ layout:
     r: 20
     t: 20
     b: 55
-  showlegend: true
+  showlegend: %fullinfo%
   xaxis:
-    showticklabels: true
+    showticklabels: %fullinfo%
     dtick: 1000
     gridcolor: RGBA(200,200,200,0.15)
     zerolinecolor: RGBA(200,200,200,0.15)
@@ -65,7 +82,7 @@ layout:
       - 4000
       - -4000
   yaxis:
-    showticklabels: true
+    showticklabels: %fullinfo%
     dtick: 1000
     gridcolor: RGBA(200,200,200,0.15)
     zerolinecolor: RGBA(200,200,200,0.15)
@@ -77,6 +94,12 @@ layout:
       - 0
 entities:
   - entity: ''
+    fn_var1: $ex vars.sensor_id = "%macid%";
+    fn_var2: $ex vars.sensor_name_prefix = "sensor.screek_human_sensor_2a_" + vars.sensor_id + "_";
+    fn_var3: $ex vars.number_name_prefix = "number.screek_human_sensor_2a_" + vars.sensor_id + "_";
+    fn_var4: $ex vars.is_inch_unit = hass.states[vars.sensor_name_prefix + "target1_x"].attributes.unit_of_measurement == "in";
+    # name: sensor_id
+  - entity: ''
     name: Target1
     marker:
       size: 10
@@ -85,9 +108,21 @@ entities:
       shape: spline
       width: 5
     x:
-      - $ex hass.states["sensor.screek_human_sensor_2a_%macid%_target1_x"].state
-    'y':
-      - $ex hass.states["sensor.screek_human_sensor_2a_%macid%_target1_y"].state
+      - $ex {
+          var x = hass.states[vars.sensor_name_prefix + "target1_x"].state;
+          var y = hass.states[vars.sensor_name_prefix + "target1_y"].state;
+          if (x == 0 && y == 0) { return -9999 };
+          if (vars.is_inch_unit) { x = x * 25.4 };
+          return x;
+        }
+    y:
+      - $ex {
+          var x = hass.states[vars.sensor_name_prefix + "target1_x"].state;
+          var y = hass.states[vars.sensor_name_prefix + "target1_y"].state;
+          if (x == 0 && y == 0) { return -9999 };
+          if (vars.is_inch_unit) { y = y * 25.4 };
+          return y;
+        }
   - entity: ''
     name: Target2
     marker:
@@ -97,10 +132,23 @@ entities:
       shape: spline
       width: 5
     x:
-      - $ex hass.states["sensor.screek_human_sensor_2a_%macid%_target2_x"].state
-    'y':
-      - $ex hass.states["sensor.screek_human_sensor_2a_%macid%_target2_y"].state
+      - $ex {
+          var x = hass.states[vars.sensor_name_prefix + "target2_x"].state;
+          var y = hass.states[vars.sensor_name_prefix + "target2_y"].state;
+          if (x == 0 && y == 0) { return -9999 };
+          if (vars.is_inch_unit) { x = x * 25.4 };
+          return x;
+        }
+    y:
+      - $ex {
+          var x = hass.states[vars.sensor_name_prefix + "target2_x"].state;
+          var y = hass.states[vars.sensor_name_prefix + "target2_y"].state;
+          if (x == 0 && y == 0) { return -9999 };
+          if (vars.is_inch_unit) { y = y * 25.4 };
+          return y;
+        }
   - entity: ''
+    internal: false
     name: Target3
     marker:
       size: 10
@@ -109,9 +157,22 @@ entities:
       shape: spline
       width: 5
     x:
-      - $ex hass.states["sensor.screek_human_sensor_2a_%macid%_target3_x"].state
-    'y':
-      - $ex hass.states["sensor.screek_human_sensor_2a_%macid%_target3_y"].state
+      - $ex {
+          var x = hass.states[vars.sensor_name_prefix + "target3_x"].state;
+          var y = hass.states[vars.sensor_name_prefix + "target3_y"].state;
+          if (x == 0 && y == 0) { return -9999 };
+          if (vars.is_inch_unit) { x = x * 25.4 };
+          return x;
+        }
+    y:
+      - $ex {
+          var x = hass.states[vars.sensor_name_prefix + "target3_x"].state;
+          var y = hass.states[vars.sensor_name_prefix + "target3_y"].state;
+          if (x == 0 && y == 0) { return -9999 };
+          if (vars.is_inch_unit) { y = y * 25.4 };
+          return y;
+        }
+
   - entity: ''
     name: Zone1
     mode: lines
@@ -124,35 +185,35 @@ entities:
     x:
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_x_begin"].state
+        hass.states[vars.number_name_prefix + "zone1_x_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_x_begin"].state
+        hass.states[vars.number_name_prefix + "zone1_x_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_x_end"].state
+        hass.states[vars.number_name_prefix + "zone1_x_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_x_end"].state
+        hass.states[vars.number_name_prefix + "zone1_x_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_x_begin"].state
-    'y':
+        hass.states[vars.number_name_prefix + "zone1_x_begin"].state
+    y:
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone1_y_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_y_end"].state
+        hass.states[vars.number_name_prefix + "zone1_y_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_y_end"].state
+        hass.states[vars.number_name_prefix + "zone1_y_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone1_y_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone1_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone1_y_begin"].state
   - entity: ''
     name: Zone2
     mode: lines
@@ -165,35 +226,35 @@ entities:
     x:
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_x_begin"].state
+        hass.states[vars.number_name_prefix + "zone2_x_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_x_begin"].state
+        hass.states[vars.number_name_prefix + "zone2_x_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_x_end"].state
+        hass.states[vars.number_name_prefix + "zone2_x_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_x_end"].state
+        hass.states[vars.number_name_prefix + "zone2_x_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_x_begin"].state
-    'y':
+        hass.states[vars.number_name_prefix + "zone2_x_begin"].state
+    y:
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone2_y_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_y_end"].state
+        hass.states[vars.number_name_prefix + "zone2_y_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_y_end"].state
+        hass.states[vars.number_name_prefix + "zone2_y_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone2_y_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone2_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone2_y_begin"].state
   - entity: ''
     name: Zone3
     mode: lines
@@ -206,35 +267,35 @@ entities:
     x:
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_x_begin"].state
+        hass.states[vars.number_name_prefix + "zone3_x_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_x_begin"].state
+        hass.states[vars.number_name_prefix + "zone3_x_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_x_end"].state
+        hass.states[vars.number_name_prefix + "zone3_x_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_x_end"].state
+        hass.states[vars.number_name_prefix + "zone3_x_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_x_begin"].state
-    'y':
+        hass.states[vars.number_name_prefix + "zone3_x_begin"].state
+    y:
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone3_y_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_y_end"].state
+        hass.states[vars.number_name_prefix + "zone3_y_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_y_end"].state
+        hass.states[vars.number_name_prefix + "zone3_y_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone3_y_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zone3_y_begin"].state
+        hass.states[vars.number_name_prefix + "zone3_y_begin"].state
   - entity: ''
     name: ExZone
     mode: lines
@@ -247,35 +308,35 @@ entities:
     x:
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_x_begin"].state
+        hass.states[vars.number_name_prefix + "zout1_x_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_x_begin"].state
+        hass.states[vars.number_name_prefix + "zout1_x_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_x_end"].state
+        hass.states[vars.number_name_prefix + "zout1_x_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_x_end"].state
+        hass.states[vars.number_name_prefix + "zout1_x_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_x_begin"].state
-    'y':
+        hass.states[vars.number_name_prefix + "zout1_x_begin"].state
+    y:
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_y_begin"].state
+        hass.states[vars.number_name_prefix + "zout1_y_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_y_end"].state
+        hass.states[vars.number_name_prefix + "zout1_y_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_y_end"].state
+        hass.states[vars.number_name_prefix + "zout1_y_end"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_y_begin"].state
+        hass.states[vars.number_name_prefix + "zout1_y_begin"].state
       - >-
         $ex
-        hass.states["number.screek_human_sensor_2a_%macid%_zout1_y_begin"].state
+        hass.states[vars.number_name_prefix + "zout1_y_begin"].state
   - entity: ''
     name: Coverage
     mode: lines
@@ -288,6 +349,7 @@ entities:
     x:
       - 0
       - $ex 7500 * Math.sin((2 * Math.PI)/360 * 60)
+      - 5500
       - 4500
       - 4000
       - 3000
@@ -299,11 +361,13 @@ entities:
       - -3000
       - -4000
       - -4500
+      - -5500
       - $ex -7500 * Math.sin((2 * Math.PI)/360 * 60)
       - 0
-    'y':
+    y:
       - 0
       - $ex 7500 * Math.cos((2 * Math.PI)/360 * 60)
+      - $ex Math.sqrt( 7500**2 - 5500**2 )
       - $ex Math.sqrt( 7500**2 - 4500**2 )
       - $ex Math.sqrt( 7500**2 - 4000**2 )
       - $ex Math.sqrt( 7500**2 - 3000**2 )
@@ -315,9 +379,12 @@ entities:
       - $ex Math.sqrt( 7500**2 - 3000**2 )
       - $ex Math.sqrt( 7500**2 - 4000**2 )
       - $ex Math.sqrt( 7500**2 - 4500**2 )
+      - $ex Math.sqrt( 7500**2 - 5500**2 )
       - $ex 7500 * Math.cos((2 * Math.PI)/360 * 60)
       - 0
-raw_plotly_config: true`;
+raw_plotly_config: true
+
+title: $ex "Human Sensor 2A " + vars.sensor_id + " Map"`;
 
         // 获取输入框元素
         var inputIdElement = document.getElementById("inputId");
@@ -325,31 +392,49 @@ raw_plotly_config: true`;
         // 获取状态元素
         var statusElement = document.getElementById("status");
 
+        // 获取图片元素
+        var imageElement = document.getElementById('previewImage');
+
         // 添加输入事件监听器
         inputIdElement.addEventListener("input", function() {
             var inputId = inputIdElement.value.trim();
-            
             // 无论输入是否为6位，都保存输入的值到本地存储
             localStorage.setItem("inputId", inputId);
+            genCode();
+        });
 
+        // 生成代码
+        function genCode(){
+            var inputId = inputIdElement.value.trim();
             // 检查输入的ID是否为6位
             if (inputId.length !== 6) {
                 // 设置警告消息的文本内容和颜色
                 statusElement.textContent = "Please enter the 6-digit 2A sensor ID correctly!";
+                document.getElementById("codeOutput").value = ""
             } else {
+                var fullVersionSelected = document.getElementById('fullVersion').checked;
                 // 清空警告消息和样式
                 statusElement.textContent = "The corresponding Card code has been generated :)";
                 var modifiedCode = originalCode.replace(/%macid%/g, inputId);
+                if (fullVersionSelected){
+                    modifiedCode = modifiedCode.replace(/%fullinfo%/g, "true");
+                    modifiedCode = modifiedCode.replace(/%sel_version%/g, "Full");
+                    imageElement.src = "./assets/full_version.png"
+                }else{
+                    modifiedCode = modifiedCode.replace(/%fullinfo%/g, "false");
+                    modifiedCode = modifiedCode.replace(/%sel_version%/g, "Simple");
+                    imageElement.src = "./assets/simple_version.png"
+                }
                 document.getElementById("codeOutput").value = modifiedCode;
             }
-        });
+        }
 
         // 添加点击事件监听器
         document.getElementById("copyButton").addEventListener("click", function() {
             var codeOutput = document.getElementById("codeOutput");
             codeOutput.select(); // 选择文本域中的内容
             document.execCommand("copy"); // 复制选中的文本到剪贴板
-            statusElement.textContent = "Code Copied!";
+            // statusElement.textContent = "Code Copied!";
             // alert("Code copied to clipboard!"); // 弹出复制成功的提示
         });
 
@@ -361,9 +446,17 @@ raw_plotly_config: true`;
                 inputIdElement.dispatchEvent(new Event("input")); // 触发输入事件以更新相关内容
             }
         });
+
+        document.getElementsByName('versionOptions').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    // 每当单选框的选中状态发生变化时，这个函数就会被调用
+                    genCode()
+                });
+            });
+
     </script>
 </body>
 <p style="text-align: center; margin-top: 20px;">
-    The code for the map base on <a href="https://github.com/athua/ha-utils/blob/12cbb61877e6bc143637d02ff5113f43713a3245/LD2450-map-chart.yaml" target="_blank">athua</a>.
+    The code for the map base on <a href="https://github.com/athua/ha-utils/blob/12cbb61877e6bc143637d02ff5113f43713a3245/LD2450-map-chart.yaml" target="_blank">athua</a>'s great work.
 </p>
 </html>
