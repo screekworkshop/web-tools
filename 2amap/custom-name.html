@@ -21,7 +21,7 @@
     <div class="container">
         <div class="form-group">
             <label for="inputId">Enter your 2A's Custom Name:</label>
-            <input type="text" class="form-control" id="inputId" placeholder="2A ID">
+            <input type="text" class="form-control" id="inputId" placeholder="2A Entiry ID For All Target Counts">
             <small id="status" class="form-text text-muted">Enter the Entiry ID inside your 2A's All Target Counts (e.g. screek_custom_2a_all_target_counts) and click on <b>Copy Code</b>.</small>
         </div>
 
@@ -424,6 +424,9 @@ title: $ex "Human Sensor 2A Map"`;
                 statusElement.textContent = "Please Enter the Entiry ID inside your 2A's All Target Counts (e.g. screek_custom_2a_all_target_counts)!";
                 document.getElementById("codeOutput").value = ""
             } else {
+                // 移除后缀
+                inputId = inputId.substring(0, inputId.length - suffix.length);
+
                 var fullVersionSelected = document.getElementById('fullVersion').checked;
                 // 清空警告消息和样式
                 statusElement.textContent = "The corresponding Card code has been generated :)";
