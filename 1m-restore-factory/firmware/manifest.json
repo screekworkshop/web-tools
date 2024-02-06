@@ -1,0 +1,15 @@
+{
+  "name": "1M Factory Firmware: V230804_1",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "factory-1m-V230804_1.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
