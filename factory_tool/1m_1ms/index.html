@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Screek Human Sensor 1M Factory Restore Tool</title>
+    <title>Screek Human Sensor 1M Factory Restore And Config Tool</title>
     <style>
         /* 添加CSS样式 */
         body {
@@ -29,7 +29,7 @@
 </head>
 
 <body>
-    <h1>Screek Human Sensor 1M(S) Factory Restore Tool</h1>
+    <h1>Screek Human Sensor 1M(S) Factory Restore And Config Tool</h1>
 
     <div id="main" style="display: none;">
 
@@ -38,7 +38,11 @@
           type="module"
           src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"
         ></script>
-        <esp-web-install-button id="installButton" manifest="firmware/manifest.json" style="display:block; margin: 0 auto;"></esp-web-install-button>
+        <esp-web-install-button id="installButton" manifest="firmware/manifest.json" style="display:block; margin: 0 auto;">
+            <!-- <button slot="activate">Restore Factory Firmware</button> -->
+            <span slot="unsupported">your browser doesn't support!</span>
+            <span slot="not-allowed">you are not allowed to use this on HTTP!</span>
+        </esp-web-install-button>
         <br>
         <br>
         <span>For restoring factory firmware of 1M and 1MS sensors, see the <a href="https://docs.screek.io/gen1/factory-firmware-1-series-sensors-1m" target="_blank">documentation</a>.</span>
