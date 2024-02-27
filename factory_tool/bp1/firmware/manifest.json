@@ -8,7 +8,7 @@
       "chipFamily": "ESP32",
       "parts": [
         {
-          "path": "/bluetooth-proxy/esp32-generic/esp32-bluetooth-proxy-esp32.bin",
+          "path": "esp32-bluetooth-proxy-esp32.bin",
           "offset": 0
         }
       ]
