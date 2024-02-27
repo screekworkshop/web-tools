@@ -1,0 +1,17 @@
+{
+  "name": "Bluetooth Proxy(from esphome)",
+  "version": "2024.2.0",
+  "home_assistant_domain": "esphome",
+  "new_install_skip_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        {
+          "path": "/bluetooth-proxy/esp32-generic/esp32-bluetooth-proxy-esp32.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
