@@ -12,19 +12,4 @@
       ]
     }
   ]
-},
-{
-  "name": "2A Normal Factory Firmware: V230908_1_stable",
-  "new_install_prompt_erase": true,
-  "builds": [
-    {
-      "chipFamily": "ESP32-C3",
-      "parts": [
-        {
-          "path": "factory-2a-V230908_1_stable.bin",
-          "offset": 0
-        }
-      ]
-    }
-  ]
 }
