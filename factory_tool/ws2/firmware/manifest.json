@@ -1,0 +1,15 @@
+{
+  "name": "WS2 Factory Firmware: V230902_1",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "factory-screek-water-sensor-ws2-V230902_1.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
