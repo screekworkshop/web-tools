@@ -1,0 +1,16 @@
+{
+  "name": "2A Factory Firmware: V240122_1",
+  "home_assistant_domain": "esphome",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "ds1-factory-V240122_1",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
