@@ -1,7 +1,7 @@
 {
   "name": "DS1 Factory Firmware: V240122_1",
   "home_assistant_domain": "esphome",
-  "new_install_prompt_erase": true,
+  "new_install_prompt_erase": false,
   "builds": [
     {
       "chipFamily": "ESP32-C3",
