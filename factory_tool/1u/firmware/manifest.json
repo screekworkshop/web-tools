@@ -1,6 +1,9 @@
 {
-  "name": "1U Factory Firmware: V230803_1",
-  // "new_install_prompt_erase": true,
+  "name": "1U Factory Firmware",
+  "version": "V230803_1",
+  "new_install_prompt_erase": false,
+  "home_assistant_domain": "esphome",
+  "new_install_improv_wait_time": 2,
   "builds": [
     {
       "chipFamily": "ESP32-S2",
