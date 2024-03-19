@@ -1,0 +1,15 @@
+{
+  "name": "1U Factory Firmware: V230803_1",
+  // "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S2",
+      "parts": [
+        {
+          "path": "factory-1u-V230803_1.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
