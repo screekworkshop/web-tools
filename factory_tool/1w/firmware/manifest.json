@@ -1,0 +1,15 @@
+{
+  "name": "1W Factory Firmware: V230825_1_fix",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "factory-1w-human_sensor-V230825_1_fix.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
