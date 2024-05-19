@@ -1,5 +1,5 @@
 {
-  "name": "DS1 Factory Firmware: V240512_2_beta",
+  "name": "SCOS2-1 Factory Firmware: V240512_2_beta",
   "home_assistant_domain": "esphome",
   "new_install_prompt_erase": true,
   "builds": [
