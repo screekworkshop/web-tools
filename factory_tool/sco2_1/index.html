@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Screek CO2 Sensor SOC2-1 Factory Restore And Config Tool</title>
+    <style>
+        /* 添加CSS样式 */
+        body {
+            text-align: center; /* 将内容居中显示 */
+        }
+        #main, #notSupported {
+            margin: 0 auto; /* 中间对齐 */
+            width: fit-content; /* 使div宽度适应内容 */
+        }
+        span {
+            display: block; /* 使链接单独一行 */
+            margin-top: 20px; /* 在元素上方添加一些空间 */
+            font-size: 16px; /* 设置字体大小 */
+            font-family: Arial, sans-serif; /* 设置字体 */
+            color: #333; /* 设置字体颜色 */
+        }
+        a {
+            color: #007bff; /* 链接颜色 */
+            text-decoration: none; /* 去掉下划线 */
+        }
+        a:hover {
+            text-decoration: underline; /* 鼠标悬停时下划线 */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Screek CO2 Sensor SOC2-1 Factory Restore And Config Tool</h1>
+
+    <div id="main" style="display: none;">
+
+        <br>
+        <script
+          type="module"
+          src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"
+        ></script>
+        <esp-web-install-button id="installButton" manifest="firmware/manifest.json" style="display:block; margin: 0 auto;">
+            <!-- <button slot="activate">Restore Factory Firmware</button> -->
+            <span slot="unsupported">your browser doesn't support!</span>
+            <span slot="not-allowed">you are not allowed to use this on HTTP!</span>
+        </esp-web-install-button>
+        <br>
+        <br>
+        <span>base on esp web tool</span>
+        <!-- <span>Document for restoring factory firmware of 2A sensors, see the <a href="https://docs.screek.io/2a/recover" target="_blank">documentation</a>.</span> -->
+    </div>
+    <div id="notSupported" style="display: none;">
+        Your browser does not support the Web Serial API. Try Chrome
+    </div>
+    
+
+    <script>
+        if(navigator.serial){
+            document.getElementById("notSupported").style.display = 'none';
+            document.getElementById("main").style.display = 'block';
+        } else {
+            document.getElementById("notSupported").style.display = 'block';
+            document.getElementById("main").style.display = 'none';
+        }
+    </script>
+
+</body>
+
+</html>
