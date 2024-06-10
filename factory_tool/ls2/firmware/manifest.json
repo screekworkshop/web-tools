@@ -1,0 +1,15 @@
+{
+  "name": "LS2 Factory Firmware",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "factory-ls2-V240402_1.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
