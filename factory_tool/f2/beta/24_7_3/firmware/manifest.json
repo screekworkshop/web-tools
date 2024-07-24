@@ -1,0 +1,15 @@
+{
+  "name": "F2 Beta Factory Firmware: V24.7.3_beta",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "f2-beta-factory.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
