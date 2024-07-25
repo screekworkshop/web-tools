@@ -1,0 +1,15 @@
+{
+  "name": "THS1 Factory Firmware: V240115_1",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "ths1-factory-V240115_1",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
