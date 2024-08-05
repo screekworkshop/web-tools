@@ -7,7 +7,7 @@
       "chipFamily": "ESP32-S2",
       "parts": [
         {
-          "path": "factory_1u_V230825_1_fix.bin",
+          "path": "factory_1u_ V230825_1_fix.bin",
           "offset": 0
         }
       ]
